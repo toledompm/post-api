@@ -1,0 +1,18 @@
+name: typescript ci
+
+on: push
+
+jobs:
+  lint-and-test:
+    env:
+      NODE_ENV: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18.4.x
+      - run: npm install
+      - run: npm run build
+      - run: npm run lint
+      - run: npm test

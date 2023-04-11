@@ -1,4 +1,5 @@
 .nyc_output
 .vscode
+.env
 node_modules
 dist

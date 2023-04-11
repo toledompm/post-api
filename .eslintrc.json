@@ -10,9 +10,6 @@
   "extends": [
     "@quero/eslint-config-typescript"
   ],
-  "rules": {
-    "@typescript-eslint/no-misused-promises": "off"
-  },
   "root": true,
   "env": {
     "node": true,

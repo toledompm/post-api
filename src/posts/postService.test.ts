@@ -29,6 +29,9 @@ test('getPosts', async (t) => {
 
   fakeGetPosts.resolves(fakePosts);
 
-  const posts = await postService.getPosts();
+  const posts = await postService.getPosts({
+    published: false,
+    tags: [],
+  });
   t.deepEqual(posts, fakePosts);
 });

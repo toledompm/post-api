@@ -1,16 +1,36 @@
-IMG_NAME=post-api
-IMG_TAG=latest
-DEV_IMG_NAME=$(IMG_NAME)-dev
-DEV_IMG_TAG=latest
-
-.PHONY: docker-dev-build
-docker-dev-build:
-	DOCKER_BUILDKIT=1 docker build --target build -t "$(IMG_NAME):$(IMG_TAG)" .
+IMG_NAME=node
+IMG_TAG=18.12-slim
 
 .PHONY: docker-dev
-docker-dev: docker-dev-build
-	docker run --rm -it -p 3000:3000 -v "$(PWD):/app" "$(IMG_NAME):$(IMG_TAG)" npm run dev
+docker-dev:
+	docker run \
+		--rm \
+		-it \
+		-v "$(PWD):/app" \
+		-w /app \
+		-p 3000:3000 \
+		--env-file .env \
+		"$(IMG_NAME):$(IMG_TAG)" \
+		npm run dev
 
 .PHONY: docker-test
-docker-test: docker-dev-build
-	docker run --rm -v "$(PWD):/app" "$(IMG_NAME):$(IMG_TAG)" npm run test
+docker-test:
+	docker run \
+		--rm \
+		-it \
+		-v "$(PWD):/app" \
+		-w /app \
+		--env-file .env \
+		"$(IMG_NAME):$(IMG_TAG)" \
+		npm run test
+
+.PHONY: docker-test
+docker-shell:
+	docker run \
+		--rm \
+		-it \
+		-v "$(PWD):/app" \
+		-w /app \
+		--env-file .env \
+		"$(IMG_NAME):$(IMG_TAG)" \
+		sh

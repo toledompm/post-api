@@ -7,10 +7,12 @@ export interface IPost {
   tags: string[];
 }
 
+export type PostFilter = Pick<IPost, 'published' | 'tags'>;
+
 export interface IPostRepository {
-  getPosts(): Promise<IPost[]>;
+  getPosts(filter: PostFilter): Promise<IPost[]>;
 }
 
 export interface IPostService {
-  getPosts(): Promise<IPost[]>;
+  getPosts(filter: PostFilter): Promise<IPost[]>;
 }

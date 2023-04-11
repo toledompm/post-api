@@ -4,17 +4,26 @@ ARG NODE_ENV=prod
 
 WORKDIR /app
 
-COPY . .
+RUN npm install -g npm@9.6.1
+
+COPY package*.json ./
 
 RUN npm install
+
+COPY src ./src
+
 RUN npm run build
 
 FROM node:18.12-alpine AS app
 
 WORKDIR /app
 
-COPY --from=build /app/dist /app
+RUN npm install -g npm@9.6.1
+
+COPY --from=build /app/package*.json ./
 
 RUN npm install --only=prod
 
-ENTRYPOINT [ "node", "index.js" ]
+COPY --from=build /app/dist ./
+
+ENTRYPOINT [ "node", "app.js" ]

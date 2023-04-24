@@ -20,7 +20,7 @@ export class NotionRepository implements IPostRepository {
     };
 
     const page = await this.client.databases.query(query);
-    const posts = page.results.map((result) => {
+    return page.results.map((result) => {
       if (!isFullPage(result)) throw new Error('Result is not full page');
 
       const postProps = parseNotionProps<IPostInfo>(
@@ -39,8 +39,6 @@ export class NotionRepository implements IPostRepository {
         date: new Date('2021-01-01'),
       };
     });
-
-    return Promise.all(posts);
   }
 
   async getPostContent(postID: string): Promise<IPostContent[] | null> {

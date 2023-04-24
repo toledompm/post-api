@@ -11,6 +11,9 @@
     "@quero/eslint-config-typescript"
   ],
   "root": true,
+  "rules": {
+    "max-classes-per-file": "off"
+  },
   "env": {
     "node": true,
     "jest": true,

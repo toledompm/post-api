@@ -1,45 +1,46 @@
-import { genPostRoutes } from '@posts/postController';
-import { PostService } from '@posts/postService';
 import { DatabaseType, appConfig } from '@common/config';
-import { NotionRepository } from '@posts/notionRepository';
-import { IPost, IPostRepository, IPostService } from '@posts/types';
-import { PostEntity } from '@posts/postEntity';
 import { Client } from '@notionhq/client';
+import { NotionRepository } from '@posts/notionRepository';
+import { postContentFactory } from '@posts/postContentEntity';
+import { genPostRoutes } from '@posts/postController';
+import { postInfoFactory } from '@posts/postInfoEntity';
+import { PostService } from '@posts/postService';
+import { IPostRepository, IPostService, PostContentFactory, PostInfoFactory } from '@posts/types';
 import { FastifyPluginAsync } from 'fastify';
 
 const { post: postConfig } = appConfig();
 
-const postFactory = (props: Partial<IPost>): IPost => {
-  return new PostEntity(props);
-};
+const postServiceFactory = (postRepository: IPostRepository): IPostService => new PostService(postRepository);
 
-const notionRepositoryFactory = (): IPostRepository => {
-  const { apiToken, databaseId } = postConfig.database.notion;
-  const client = new Client({ auth: apiToken });
-  return new NotionRepository(client, factories.entity, databaseId);
-};
-
-const postServiceFactory = (): IPostService => {
-  return new PostService(factories.repository());
-};
-
-const postRoutesFactory = (): FastifyPluginAsync => {
-  return genPostRoutes(factories.service(), '/posts');
+const notionRepositoryFactory = (opts: { apiToken: string, databaseId: string, postInfoFactory: PostInfoFactory, postContentFactory: PostContentFactory }): IPostRepository => {
+  const client = new Client({ auth: opts.apiToken });
+  return new NotionRepository(client, opts.postInfoFactory, opts.postContentFactory, opts.databaseId);
 };
 
 const repositoryMapping = {
   [DatabaseType.NOTION]: {
    factory: notionRepositoryFactory,
+   opts: { apiToken: postConfig.database.notion.apiToken, databaseId: postConfig.database.notion.databaseId },
   },
 };
 
-const factories = {
-  entity: postFactory,
-  repository: repositoryMapping[postConfig.database.type].factory,
-  service: postServiceFactory,
-  routes: postRoutesFactory,
+const buildPostRoutes = (): FastifyPluginAsync => {
+  const databaseType = postConfig.database.type;
+
+  const repositoryCustomOpts = repositoryMapping[databaseType].opts;
+  const repositoryOpts = {
+    ...repositoryCustomOpts,
+    postInfoFactory,
+    postContentFactory,
+  };
+
+  const repositoryFactory = repositoryMapping[databaseType].factory;
+
+  const repository = repositoryFactory(repositoryOpts);
+  const service = postServiceFactory(repository);
+  return genPostRoutes(service, '/posts');
 };
 
 export const postModule = {
-  routes: factories.routes(),
+  routes: buildPostRoutes(),
 };

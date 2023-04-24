@@ -1,15 +1,17 @@
-import { IPost, IPostRepository, PostFilter } from '@posts/types';
-import { Client, isFullPage } from '@notionhq/client';
-import { CheckboxPropertyItemObjectResponse, MultiSelectPropertyItemObjectResponse, PageObjectResponse, RichTextItemResponse } from '@notionhq/client/build/src/api-endpoints';
+import { IPostContent, IPostInfo, IPostRepository, PostContentFactory, PostFilter, PostInfoFactory } from '@posts/types';
+import { Client, isFullBlock, isFullPage } from '@notionhq/client';
+import { CheckboxPropertyItemObjectResponse, Heading1BlockObjectResponse, MultiSelectPropertyItemObjectResponse, PageObjectResponse, ParagraphBlockObjectResponse, RichTextItemResponse } from '@notionhq/client/build/src/api-endpoints';
+import { logger } from '@common/logger';
 
 export class NotionRepository implements IPostRepository {
   constructor(
     private client: Client,
-    private postFactory: (props: Partial<IPost>) => IPost,
+    private postInfoFactory: PostInfoFactory,
+    private postContentFactory: PostContentFactory,
     private databaseId: string,
   ) {}
 
-  async getPosts(postFilter: PostFilter): Promise<IPost[]> {
+  async getPosts(postFilter: PostFilter): Promise<IPostInfo[]> {
     const query = {
       database_id: this.databaseId,
       filter: {
@@ -21,25 +23,73 @@ export class NotionRepository implements IPostRepository {
     const posts = page.results.map((result) => {
       if (!isFullPage(result)) throw new Error('Result is not full page');
 
-      const post = parseNotionProps<IPost>(
+      const postProps = parseNotionProps<IPostInfo>(
         result,
         [
           { propName: 'Title', outputField: 'title' },
           { propName: 'Published', outputField: 'published' },
           { propName: 'Tags', outputField: 'tags' },
+          { propName: 'Id', outputField: 'id' },
         ],
-        this.postFactory({}),
+        this.postInfoFactory({}),
       );
 
       return {
-        ...post,
-        id: result.id,
-        body: 'string',
-        date: new Date(),
+        ...postProps,
+        date: new Date('2021-01-01'),
       };
     });
 
-    return posts;
+    return Promise.all(posts);
+  }
+
+  async getPostContent(postID: string): Promise<IPostContent[] | null> {
+    const pageID = await this.getPageID(postID);
+
+    if (!pageID) return null;
+
+    const response = await this.client.blocks.children.list({
+      block_id: pageID,
+    });
+
+    const postBodyList: IPostContent[] = [];
+
+    return response.results.reduce((list, result) => {
+      if (!isFullBlock(result)) throw new Error('Result is not full block');
+
+      if (isHeading1Block(result)) {
+        list.push(this.postContentFactory({ heading: parseHeading1Block(result) }));
+      } else if (isParagraphBlock(result)) {
+        list.push(this.postContentFactory({ paragraph: parseParagraphBlock(result) }));
+      } else {
+        logger.error(`Unknown block type: ${result.type}`);
+      }
+
+      return list;
+    }, postBodyList);
+  }
+
+  private async getPageID(postID: string): Promise<string | null> {
+    const query = {
+      database_id: this.databaseId,
+      filter: {
+        and: [
+          {
+            property: 'Id',
+            rich_text: {
+              equals: postID,
+            },
+          },
+        ],
+      },
+    };
+
+    const page = await this.client.databases.query(query);
+    if (page.results.length === 0 || page.results.length > 1) return null;
+
+    const pageID = page.results[0].id;
+
+    return pageID;
   }
 }
 
@@ -75,6 +125,7 @@ function parseNotionProps<T>(notionResponse: PageObjectResponse, props: { propNa
     if (isCheckboxProp(prop)) parsedProp = parseCheckboxProp(prop);
     else if (isTitleProp(prop)) parsedProp = parseTitleProp(prop);
     else if (isMultiselectProp(prop)) parsedProp = parseMultiselectProp(prop);
+    else if (isRichTextProduct(prop)) parsedProp = parseRichTextProp(prop);
     else throw new Error(`Unknown prop type: ${prop.type}`);
 
     return {
@@ -96,6 +147,10 @@ function isMultiselectProp(prop: Record<string, any>): prop is MultiSelectProper
   return prop.type === 'multi_select';
 }
 
+function isRichTextProduct(prop: Record<string, any>): prop is { rich_text: RichTextItemResponse[] } {
+  return prop.type === 'rich_text';
+}
+
 function parseCheckboxProp(prop: CheckboxPropertyItemObjectResponse): boolean {
   return prop.checkbox;
 }
@@ -106,4 +161,24 @@ function parseTitleProp(prop: { title: RichTextItemResponse[] }): string {
 
 function parseMultiselectProp(prop: MultiSelectPropertyItemObjectResponse): string[] {
   return prop.multi_select.map(option => option.name);
+}
+
+function parseRichTextProp(prop: { rich_text: RichTextItemResponse[] }): string {
+  return prop.rich_text[0].plain_text;
+}
+
+function isHeading1Block(block: Record<string, any>): block is Heading1BlockObjectResponse {
+  return block.type === 'heading_1';
+}
+
+function isParagraphBlock(block: Record<string, any>): block is ParagraphBlockObjectResponse {
+  return block.type === 'paragraph';
+}
+
+function parseHeading1Block(block: Heading1BlockObjectResponse): string {
+  return block.heading_1.rich_text[0]?.plain_text || '';
+}
+
+function parseParagraphBlock(block: ParagraphBlockObjectResponse): string {
+  return block.paragraph.rich_text[0]?.plain_text ;
 }

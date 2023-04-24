@@ -1,27 +1,36 @@
 import { Client } from '@notionhq/client';
-import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import { ListBlockChildrenResponse, PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { NotionRepository } from '@posts/notionRepository';
-import { IPost } from '@posts/types';
+import { IPostContent, IPostInfo } from '@posts/types';
 import test from 'ava';
 import Sinon from 'sinon';
 
 let notionRepository: NotionRepository;
-let notionClientDatabasesQueryStub: Sinon.SinonStub;
 
-test.beforeEach(() => {
-  const postFactory = (props: Partial<IPost>) => ({
-    id: '1',
-    title: 'title',
-    body: 'body',
-    published: true,
-    date: new Date(),
-    tags: ['tag1', 'tag2'],
-    ...props,
+const DATABASE_ID = 'mydbid';
+let notionClientDatabasesQueryStub: Sinon.SinonStub;
+let notionClientBlocksChildrenListStub: Sinon.SinonStub;
+
+test.beforeEach(async () => {
+  const postContentFactory = (props: Partial<IPostContent>) => ({
+      heading: (props as any).heading,
+      paragraph: (props as any).paragraph,
   });
 
+  const postInfoFactory = (props: Partial<IPostInfo>) => ({
+      title: props.title || '',
+      published: props.published || false,
+      tags: props.tags || [],
+      id: props.id || '',
+      date: new Date('2021-01-01'),
+  });
+
+  notionClientBlocksChildrenListStub = Sinon.stub();
   notionClientDatabasesQueryStub = Sinon.stub();
-  const notionClientMock = { databases: { query: notionClientDatabasesQueryStub } };
-  notionRepository = new NotionRepository(notionClientMock as unknown as Client, postFactory, '1');
+  const notionClientMock = { databases: { query: notionClientDatabasesQueryStub }, blocks: { children: { list: notionClientBlocksChildrenListStub } } };
+  notionRepository = new NotionRepository(notionClientMock as unknown as Client, postInfoFactory, postContentFactory, DATABASE_ID);
+
+  await Promise.resolve();
 });
 
 test('getPosts', async (t) => {
@@ -36,7 +45,7 @@ test('getPosts', async (t) => {
     last_edited_time: '2021-01-01',
     parent: {
       type: 'database_id',
-      database_id: '1',
+      database_id: DATABASE_ID,
     },
     archived: false,
     properties: {
@@ -84,12 +93,34 @@ test('getPosts', async (t) => {
           },
         ],
       },
+      Id: {
+        id: '%5B%3E%3Fn',
+        type: 'rich_text',
+        rich_text: [
+          {
+            type: 'text',
+            text: {
+              content: 'post-id',
+              link: null,
+            },
+            annotations: {
+              bold: false,
+              italic: false,
+              strikethrough: false,
+              underline: false,
+              code: false,
+              color: 'default',
+            },
+            plain_text: 'post-id',
+            href: null,
+          },
+        ],
+      },
     },
     url: 'url',
   };
 
   notionClientDatabasesQueryStub.resolves({ results: [mockPageResponse] });
-
   const posts = await notionRepository.getPosts({
     published: false,
     tags: ['tag1', 'tag2'],
@@ -97,17 +128,16 @@ test('getPosts', async (t) => {
 
   t.deepEqual(posts, [
     {
-      id: '1',
+      id: 'post-id',
       title: 'title test',
-      body: 'string',
       published: true,
-      date: new Date(),
+      date: new Date('2021-01-01'),
       tags: ['tag1', 'tag2'],
     },
   ]);
 
-  t.assert(notionClientDatabasesQueryStub.calledOnceWith({
-    database_id: '1',
+  t.deepEqual(notionClientDatabasesQueryStub.getCalls()[0].firstArg, {
+    database_id: DATABASE_ID,
     filter: {
       and: [
         {
@@ -130,5 +160,110 @@ test('getPosts', async (t) => {
         },
       ],
     },
-  }));
+  });
+});
+
+test('getPostContent', async (t) => {
+  const mockPartialPageResponse: Partial<PageObjectResponse> = {
+    id: 'someid',
+  };
+
+  const mockListObjectPageResponse: ListBlockChildrenResponse = {
+    type: 'block',
+    has_more: false,
+    block: {},
+    next_cursor: null,
+    object: 'list',
+    results: [
+      {
+        object: 'block',
+        id: '1',
+        type: 'heading_1',
+        heading_1: {
+          color: 'default',
+          rich_text: [
+            {
+              type: 'text',
+              text: {
+                  content: 'TEST TITLE',
+                  link: null,
+              },
+              plain_text: 'TEST TITLE',
+              href: null,
+              annotations: {
+                bold: false,
+                italic: false,
+                strikethrough: false,
+                underline: false,
+                code: false,
+                color: 'default',
+              },
+            },
+          ],
+        },
+      },
+      {
+        object: 'block',
+        id: '2',
+        type: 'paragraph',
+        paragraph: {
+          color: 'default',
+          rich_text: [
+            {
+              type: 'text',
+              text: {
+                  content: 'This is a text paragraph',
+                  link: null,
+              },
+              plain_text: 'This is a text paragraph',
+              href: null,
+              annotations: {
+                bold: false,
+                italic: false,
+                strikethrough: false,
+                underline: false,
+                code: false,
+                color: 'default',
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  notionClientBlocksChildrenListStub.resolves(mockListObjectPageResponse);
+  notionClientDatabasesQueryStub.resolves({ results: [mockPartialPageResponse] });
+
+  const postID = 'somepostid';
+  const postContent = await notionRepository.getPostContent(postID);
+
+  t.deepEqual(postContent, [
+    {
+      heading: 'TEST TITLE',
+      paragraph: undefined,
+    },
+    {
+      heading: undefined,
+      paragraph: 'This is a text paragraph',
+    },
+  ]);
+
+  t.deepEqual(notionClientBlocksChildrenListStub.getCalls()[0].firstArg, {
+    block_id: mockPartialPageResponse.id,
+  });
+
+  t.deepEqual(notionClientDatabasesQueryStub.getCalls()[0].firstArg, {
+    database_id: DATABASE_ID,
+    filter: {
+      and: [
+        {
+          property: 'Id',
+          rich_text: {
+            equals: postID,
+          },
+        },
+      ],
+    },
+  });
 });

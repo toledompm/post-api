@@ -1,6 +1,6 @@
 import { IPostContent, IPostInfo, IPostRepository, PostContentFactory, PostFilter, PostInfoFactory } from '@posts/types';
 import { Client, isFullBlock, isFullPage } from '@notionhq/client';
-import { CheckboxPropertyItemObjectResponse, Heading1BlockObjectResponse, MultiSelectPropertyItemObjectResponse, PageObjectResponse, ParagraphBlockObjectResponse, RichTextItemResponse } from '@notionhq/client/build/src/api-endpoints';
+import { CheckboxPropertyItemObjectResponse, DatePropertyItemObjectResponse, Heading1BlockObjectResponse, MultiSelectPropertyItemObjectResponse, PageObjectResponse, ParagraphBlockObjectResponse, RichTextItemResponse } from '@notionhq/client/build/src/api-endpoints';
 import { logger } from '@common/logger';
 
 export class NotionRepository implements IPostRepository {
@@ -23,21 +23,17 @@ export class NotionRepository implements IPostRepository {
     return page.results.map((result) => {
       if (!isFullPage(result)) throw new Error('Result is not full page');
 
-      const postProps = parseNotionProps<IPostInfo>(
+      return parseNotionProps<IPostInfo>(
         result,
         [
           { propName: 'Title', outputField: 'title' },
           { propName: 'Published', outputField: 'published' },
           { propName: 'Tags', outputField: 'tags' },
           { propName: 'Id', outputField: 'id' },
+          { propName: 'Date', outputField: 'date' },
         ],
         this.postInfoFactory({}),
       );
-
-      return {
-        ...postProps,
-        date: new Date('2021-01-01'),
-      };
     });
   }
 
@@ -118,12 +114,13 @@ function parseNotionProps<T>(notionResponse: PageObjectResponse, props: { propNa
     const prop = notionResponse.properties[propName];
     if (!prop) return acc;
 
-    let parsedProp: boolean | string | string[];
+    let parsedProp: boolean | string | string[] | Date;
 
     if (isCheckboxProp(prop)) parsedProp = parseCheckboxProp(prop);
     else if (isTitleProp(prop)) parsedProp = parseTitleProp(prop);
     else if (isMultiselectProp(prop)) parsedProp = parseMultiselectProp(prop);
     else if (isRichTextProduct(prop)) parsedProp = parseRichTextProp(prop);
+    else if (isDateProp(prop)) parsedProp = parseDateProp(prop);
     else throw new Error(`Unknown prop type: ${prop.type}`);
 
     return {
@@ -149,6 +146,10 @@ function isRichTextProduct(prop: Record<string, any>): prop is { rich_text: Rich
   return prop.type === 'rich_text';
 }
 
+function isDateProp(prop: Record<string, any>): prop is DatePropertyItemObjectResponse {
+  return prop.type === 'date';
+}
+
 function parseCheckboxProp(prop: CheckboxPropertyItemObjectResponse): boolean {
   return prop.checkbox;
 }
@@ -163,6 +164,12 @@ function parseMultiselectProp(prop: MultiSelectPropertyItemObjectResponse): stri
 
 function parseRichTextProp(prop: { rich_text: RichTextItemResponse[] }): string {
   return prop.rich_text[0].plain_text;
+}
+
+function parseDateProp(prop: DatePropertyItemObjectResponse): Date {
+  const dateString = prop.date?.start;
+  if (!dateString) throw new Error('Date prop is empty');
+  return new Date(dateString);
 }
 
 function isHeading1Block(block: Record<string, any>): block is Heading1BlockObjectResponse {

@@ -34,6 +34,7 @@ test.beforeEach(async () => {
 });
 
 test('getPosts', async (t) => {
+  const dateString = '2021-01-01T00:00:00.000Z';
   const mockPageResponse: PageObjectResponse = {
     icon: null,
     cover: null,
@@ -116,6 +117,15 @@ test('getPosts', async (t) => {
           },
         ],
       },
+      Date: {
+        id: '4',
+        type: 'date',
+        date: {
+          time_zone: 'Europe/Paris',
+          start: dateString,
+          end: null,
+        },
+      },
     },
     url: 'url',
   };
@@ -131,7 +141,7 @@ test('getPosts', async (t) => {
       id: 'post-id',
       title: 'title test',
       published: true,
-      date: new Date('2021-01-01'),
+      date: new Date(dateString),
       tags: ['tag1', 'tag2'],
     },
   ]);

@@ -36,9 +36,10 @@ export const genPostRoutes = (postService: IPostService, routePrefix: string): F
             },
             tag: {
               type: 'array',
+              default: [],
             },
           },
-          required: ['tag'],
+          required: [],
         },
       },
     });

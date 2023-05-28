@@ -2,6 +2,8 @@ import Fastify, { FastifyInstance } from 'fastify';
 import { postModule } from '@posts/postModule';
 import { appConfig } from '@common/config';
 import Ajv from 'ajv';
+import Etag from '@fastify/etag';
+import cors from '@fastify/cors';
 
 const registerRoutes = async (instance: FastifyInstance) => {
   const promises = [
@@ -29,6 +31,12 @@ const start = async () => {
   try {
     fastify.setValidatorCompiler(({ schema }) => {
       return ajv.compile(schema);
+    });
+
+    await fastify.register(Etag);
+
+    await fastify.register(cors, {
+      origin: '*',
     });
 
     await registerRoutes(fastify);

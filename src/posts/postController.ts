@@ -21,6 +21,8 @@ export const genPostRoutes = (postService: IPostService, routePrefix: string): F
           };
 
           const posts = await postService.getPosts(filter);
+
+          void res.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=1800');
           await res.send(posts);
         };
 
@@ -53,6 +55,8 @@ export const genPostRoutes = (postService: IPostService, routePrefix: string): F
       ) => {
         const callback = async () => {
           const post = await postService.getPostContent(req.params.pageID);
+
+          void res.header('Cache-Control', 'public, max-age=86400, stale-while-revalidate=3600');
           await res.send(post);
         };
 

@@ -1,4 +1,4 @@
-import { IPostContent, IPostContentHeading, IPostContentParagraph } from '@posts/types';
+import type { IPostContent, IPostContentHeading, IPostContentParagraph } from '@posts/types';
 
 class PostContentHeading implements IPostContentHeading {
   heading: string;

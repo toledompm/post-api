@@ -1,7 +1,6 @@
-import { NotFoundError } from '@common/errors';
-import { logger } from '@common/logger';
-import { IPostService } from '@posts/types';
-import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
+import { controllerErrorHandler } from '@common/errors';
+import type { IPostService } from '@posts/types';
+import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
 
 export const genPostRoutes = (postService: IPostService, routePrefix: string): FastifyPluginAsync => {
   return (instance) => {
@@ -26,7 +25,7 @@ export const genPostRoutes = (postService: IPostService, routePrefix: string): F
           await res.send(posts);
         };
 
-        await postControllerErrorHandler(res, callback);
+        await controllerErrorHandler(res, callback);
       },
       schema: {
         querystring: {
@@ -60,7 +59,7 @@ export const genPostRoutes = (postService: IPostService, routePrefix: string): F
           await res.send(post);
         };
 
-        await postControllerErrorHandler(res, callback);
+        await controllerErrorHandler(res, callback);
       },
       schema: {
         params: {
@@ -77,18 +76,4 @@ export const genPostRoutes = (postService: IPostService, routePrefix: string): F
 
     return Promise.resolve();
   };
-};
-
-const postControllerErrorHandler = async(res: FastifyReply, callback: () => Promise<void>) => {
-  try {
-    await callback();
-  } catch (error) {
-    logger.error('Error during request', error as Error);
-
-    if (error instanceof NotFoundError) {
-      await res.status(404).send({ message: error.message });
-    } else {
-      await res.status(500).send({ message: 'Internal server error.' });
-    }
-  }
 };

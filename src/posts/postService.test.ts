@@ -1,5 +1,5 @@
 import { PostService } from '@posts/postService';
-import { IPostInfo, IPostRepository } from '@posts/types';
+import type { IPostInfo, IPostRepository } from '@posts/types';
 import test from 'ava';
 import sinon from 'sinon';
 
@@ -25,6 +25,8 @@ test('getPosts', async (t) => {
       published: true,
       date: new Date(),
       tags: ['tag1', 'tag2'],
+      slug: 'slug',
+      tweet: 'this tweet is a short description of the post',
     },
   ];
 

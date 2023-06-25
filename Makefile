@@ -36,5 +36,6 @@ docker-shell: ## Run container shell
 		-v "$(PWD):/app" \
 		-w /app \
 		--env-file .env \
+		-p 3000:3000 \
 		"$(IMG_NAME):$(IMG_TAG)" \
 		sh

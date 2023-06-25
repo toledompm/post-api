@@ -4,6 +4,8 @@ export interface IPostInfo {
   published: boolean;
   date: Date;
   tags: string[];
+  slug: string;
+  tweet: string;
 }
 
 export type PostInfoFactory = (props: Partial<IPostInfo>) => IPostInfo;

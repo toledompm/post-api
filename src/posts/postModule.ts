@@ -5,8 +5,7 @@ import { postContentFactory } from '@posts/postContentEntity';
 import { genPostRoutes } from '@posts/postController';
 import { postInfoFactory } from '@posts/postInfoEntity';
 import { PostService } from '@posts/postService';
-import { IPostRepository, IPostService, PostContentFactory, PostInfoFactory } from '@posts/types';
-import { FastifyPluginAsync } from 'fastify';
+import type { IPostRepository, IPostService, PostContentFactory, PostInfoFactory } from '@posts/types';
 
 const { post: postConfig } = appConfig();
 
@@ -24,23 +23,24 @@ const repositoryMapping = {
   },
 };
 
-const buildPostRoutes = (): FastifyPluginAsync => {
-  const databaseType = postConfig.database.type;
+const databaseType = postConfig.database.type;
 
-  const repositoryCustomOpts = repositoryMapping[databaseType].opts;
-  const repositoryOpts = {
-    ...repositoryCustomOpts,
-    postInfoFactory,
-    postContentFactory,
-  };
+const repositoryCustomOpts = repositoryMapping[databaseType].opts;
 
-  const repositoryFactory = repositoryMapping[databaseType].factory;
-
-  const repository = repositoryFactory(repositoryOpts);
-  const service = postServiceFactory(repository);
-  return genPostRoutes(service, '/posts');
+const repositoryOpts = {
+  ...repositoryCustomOpts,
+  postInfoFactory,
+  postContentFactory,
 };
 
+const repositoryFactory = repositoryMapping[databaseType].factory;
+
+const repository = repositoryFactory(repositoryOpts);
+const service = postServiceFactory(repository);
+
 export const postModule = {
-  routes: buildPostRoutes(),
+  routes: genPostRoutes,
+  exports: {
+    postService: service,
+  },
 };

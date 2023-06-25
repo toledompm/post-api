@@ -34,6 +34,10 @@ export const appConfig = () => ({
     port: parsePortEnv(process.env.PORT, 3000),
   },
   post: {
+    rss: {
+      title: process.env.RSS_TITLE || '',
+      description: process.env.RSS_DESCRIPTION || '',
+    },
     database: {
       type: parseDatabaseTypeEnv(process.env.DATABASE_TYPE, DatabaseType.NOTION),
       notion: {

@@ -1,15 +1,18 @@
-import Fastify, { FastifyInstance } from 'fastify';
-import { postModule } from '@posts/postModule';
 import { appConfig } from '@common/config';
-import Ajv from 'ajv';
-import Etag from '@fastify/etag';
 import cors from '@fastify/cors';
+import Etag from '@fastify/etag';
+import { postModule } from '@posts/postModule';
+import { rssModule } from '@rss/rssModule';
+import Ajv from 'ajv';
+import type { FastifyInstance } from 'fastify';
+import Fastify from 'fastify';
 
 const registerRoutes = async (instance: FastifyInstance) => {
   const promises = [
-    postModule.routes,
+    () => postModule.routes(postModule.exports.postService, '/posts'),
+    () => rssModule.routes(rssModule.exports.rssService, '/rss'),
   ].map(async (route) => {
-    await instance.register(route);
+    await instance.register(route());
   });
 
   await Promise.all(promises);

@@ -1,4 +1,4 @@
-FROM node:18.12-alpine AS build
+FROM node:18.16-alpine AS build
 
 ARG NODE_ENV=prod
 
@@ -14,7 +14,7 @@ COPY src ./src
 
 RUN npm run build
 
-FROM node:18.12-alpine AS app
+FROM node:18.16-alpine AS app
 
 WORKDIR /app
 

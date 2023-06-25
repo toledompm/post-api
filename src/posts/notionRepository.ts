@@ -1,7 +1,8 @@
-import { IPostContent, IPostInfo, IPostRepository, PostContentFactory, PostFilter, PostInfoFactory } from '@posts/types';
-import { Client, isFullBlock, isFullPage } from '@notionhq/client';
-import { CheckboxPropertyItemObjectResponse, DatePropertyItemObjectResponse, Heading1BlockObjectResponse, MultiSelectPropertyItemObjectResponse, PageObjectResponse, ParagraphBlockObjectResponse, RichTextItemResponse } from '@notionhq/client/build/src/api-endpoints';
 import { logger } from '@common/logger';
+import type { Client } from '@notionhq/client';
+import { isFullBlock, isFullPage } from '@notionhq/client';
+import type { CheckboxPropertyItemObjectResponse, DatePropertyItemObjectResponse, Heading1BlockObjectResponse, MultiSelectPropertyItemObjectResponse, PageObjectResponse, ParagraphBlockObjectResponse, RichTextItemResponse } from '@notionhq/client/build/src/api-endpoints';
+import type { IPostContent, IPostInfo, IPostRepository, PostContentFactory, PostFilter, PostInfoFactory } from '@posts/types';
 
 export class NotionRepository implements IPostRepository {
   constructor(
@@ -31,6 +32,8 @@ export class NotionRepository implements IPostRepository {
           { propName: 'Tags', outputField: 'tags' },
           { propName: 'Id', outputField: 'id' },
           { propName: 'Date', outputField: 'date' },
+          { propName: 'Slug', outputField: 'slug' },
+          { propName: 'Tweet', outputField: 'tweet' },
         ],
         this.postInfoFactory({}),
       );

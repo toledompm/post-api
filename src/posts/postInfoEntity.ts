@@ -1,4 +1,4 @@
-import { IPostInfo } from '@posts/types';
+import type { IPostInfo } from '@posts/types';
 
 class PostInfoEntity implements IPostInfo {
   title: string;
@@ -6,6 +6,8 @@ class PostInfoEntity implements IPostInfo {
   tags: string[];
   id: string;
   date: Date;
+  slug: string;
+  tweet: string;
 
   constructor(props: Partial<IPostInfo>) {
     this.title = props.title || '';
@@ -13,6 +15,8 @@ class PostInfoEntity implements IPostInfo {
     this.tags = props.tags || [];
     this.id = props.id || '';
     this.date = props.date || new Date();
+    this.slug = props.slug || '';
+    this.tweet = props.tweet || '';
   }
 }
 

@@ -1,5 +1,5 @@
 import { NotFoundError } from '@common/errors';
-import { IPostContent, IPostInfo, IPostRepository, IPostService, PostFilter } from '@posts/types';
+import type { IPostContent, IPostInfo, IPostRepository, IPostService, PostFilter } from '@posts/types';
 
 export class PostService implements IPostService {
   constructor(private postRepository: IPostRepository) {}

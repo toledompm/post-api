@@ -34,6 +34,8 @@ export class NotionRepository implements IPostRepository {
           { propName: 'Date', outputField: 'date' },
           { propName: 'Slug', outputField: 'slug' },
           { propName: 'Tweet', outputField: 'tweet' },
+          { propName: 'ImageURL', outputField: 'imageUrl' },
+          { propName: 'ImageAlt', outputField: 'imageAlt' },
         ],
         this.postInfoFactory({}),
       );
@@ -188,5 +190,5 @@ function parseHeading1Block(block: Heading1BlockObjectResponse): string {
 }
 
 function parseParagraphBlock(block: ParagraphBlockObjectResponse): string {
-  return block.paragraph.rich_text[0]?.plain_text ;
+  return block.paragraph.rich_text[0]?.plain_text || '';
 }

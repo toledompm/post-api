@@ -8,6 +8,8 @@ class PostInfoEntity implements IPostInfo {
   date: Date;
   slug: string;
   tweet: string;
+  imageUrl: string;
+  imageAlt: string;
 
   constructor(props: Partial<IPostInfo>) {
     this.title = props.title || '';
@@ -17,6 +19,8 @@ class PostInfoEntity implements IPostInfo {
     this.date = props.date || new Date();
     this.slug = props.slug || '';
     this.tweet = props.tweet || '';
+    this.imageUrl = props.imageUrl || '';
+    this.imageAlt = props.imageAlt || '';
   }
 }
 

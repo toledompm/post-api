@@ -25,6 +25,8 @@ test.beforeEach(async () => {
       date: new Date('2021-01-01'),
       slug: props.slug || '',
       tweet: props.tweet || '',
+      imageUrl: props.imageUrl || '',
+      imageAlt: props.imageAlt || '',
   });
 
   notionClientBlocksChildrenListStub = Sinon.stub();
@@ -174,6 +176,52 @@ test('getPosts', async (t) => {
           },
         ],
       },
+      ImageURL: {
+        id: '%5B%3E%3Fn',
+        type: 'rich_text',
+        rich_text: [
+          {
+            type: 'text',
+            text: {
+              content: '/placeholder.png',
+              link: null,
+            },
+            annotations: {
+              bold: false,
+              italic: false,
+              strikethrough: false,
+              underline: false,
+              code: false,
+              color: 'default',
+            },
+            plain_text: '/placeholder.png',
+            href: null,
+          },
+        ],
+      },
+      ImageAlt: {
+        id: '%5B%3E%3Fn',
+        type: 'rich_text',
+        rich_text: [
+          {
+            type: 'text',
+            text: {
+              content: 'Some image alt',
+              link: null,
+            },
+            annotations: {
+              bold: false,
+              italic: false,
+              strikethrough: false,
+              underline: false,
+              code: false,
+              color: 'default',
+            },
+            plain_text: 'Some image alt',
+            href: null,
+          },
+        ],
+      },
     },
     url: 'url',
   };
@@ -193,6 +241,8 @@ test('getPosts', async (t) => {
       tags: ['tag1', 'tag2'],
       slug: 'post-slug',
       tweet: 'This is a tweet that brifely describes the post.',
+      imageUrl: '/placeholder.png',
+      imageAlt: 'Some image alt',
     },
   ]);
 

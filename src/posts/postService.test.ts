@@ -27,6 +27,8 @@ test('getPosts', async (t) => {
       tags: ['tag1', 'tag2'],
       slug: 'slug',
       tweet: 'this tweet is a short description of the post',
+      imageUrl: 'https://image.com',
+      imageAlt: 'image alt',
     },
   ];
 

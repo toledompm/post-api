@@ -33,6 +33,8 @@ test('getRss', async (t) => {
       tags: ['tag1', 'tag2'],
       slug: 'post-slug',
       tweet: 'this tweet is a short description of the post',
+      imageUrl: 'https://image.com',
+      imageAlt: 'image alt',
     },
   ];
 

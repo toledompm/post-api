@@ -6,6 +6,8 @@ export interface IPostInfo {
   tags: string[];
   slug: string;
   tweet: string;
+  imageUrl: string;
+  imageAlt: string;
 }
 
 export type PostInfoFactory = (props: Partial<IPostInfo>) => IPostInfo;

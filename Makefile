@@ -12,7 +12,7 @@ docker-dev: ## Run the app in development mode
 		-it \
 		-v "$(PWD):/app" \
 		-w /app \
-		-p 3000:3000 \
+		-p 3030:3030 \
 		--env-file .env \
 		"$(IMG_NAME):$(IMG_TAG)" \
 		npm run dev
@@ -36,6 +36,6 @@ docker-shell: ## Run container shell
 		-v "$(PWD):/app" \
 		-w /app \
 		--env-file .env \
-		-p 3000:3000 \
+		-p 3030:3000 \
 		"$(IMG_NAME):$(IMG_TAG)" \
 		sh

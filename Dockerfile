@@ -1,10 +1,12 @@
-FROM node:18.16-alpine AS build
+FROM node:18.16-alpine AS base
 
 ARG NODE_ENV=prod
 
 WORKDIR /app
 
-RUN npm install -g npm@9.6.1
+RUN npm install -g npm@9.7.1
+
+FROM base AS build
 
 COPY package*.json ./
 
@@ -14,11 +16,7 @@ COPY src ./src
 
 RUN npm run build
 
-FROM node:18.16-alpine AS app
-
-WORKDIR /app
-
-RUN npm install -g npm@9.6.1
+FROM base AS app
 
 COPY --from=build /app/package*.json ./
 

@@ -31,7 +31,7 @@ const parseDatabaseTypeEnv = (env: string | undefined, defaultValue: DatabaseTyp
 export const appConfig = () => ({
   server: {
     host: process.env.HOST || 'localhost',
-    port: parsePortEnv(process.env.PORT, 3000),
+    port: parsePortEnv(process.env.PORT, 3030),
   },
   post: {
     rss: {

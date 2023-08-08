@@ -9,7 +9,7 @@ import Fastify from 'fastify';
 
 const registerRoutes = async (instance: FastifyInstance) => {
   const promises = [
-    () => postModule.routes(postModule.exports.postService, '/posts'),
+    () => postModule.routes(postModule.exports.postService, '/api/posts'),
     () => rssModule.routes(rssModule.exports.rssService, '/rss'),
   ].map(async (route) => {
     await instance.register(route());

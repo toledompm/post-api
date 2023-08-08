@@ -7,7 +7,8 @@ on:
 
 jobs:
   release:
-    environment: production
+    environment: docker
+
     runs-on: ubuntu-latest
 
     steps:
@@ -18,32 +19,14 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18.x"
 
-      - name: Install standard-version
-        run: npm install -g standard-version
+      - name: Install Semantic Release
+        run: npm install semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github -g
 
-      - name: Setup git config
-        run: |
-          git config user.name "${GITHUB_ACTOR}"
-          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-
-      - name: Run standard-version
-        run: npx standard-version --skip.tag
-
-      - name: Push changelog
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-
-      - name: Run standard-version tag
-        run: npx standard-version --skip.commit --skip.changelog --skip.bump
-
-      - name: Push tag
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.BUMP_TOKEN }}
-          branch: main
+      - name: Semantic Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.BUMP_TOKEN }}

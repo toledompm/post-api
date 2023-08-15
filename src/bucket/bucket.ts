@@ -18,7 +18,9 @@ export class Bucket implements IBucket {
     };
 
     try {
-      const response = await this.ociObjectStorageClient.headObject(headObjectRequest);
+      const response = await this.ociObjectStorageClient.headObject(
+        headObjectRequest,
+      );
 
       return response.versionId !== null;
     } catch (error) {
@@ -30,7 +32,11 @@ export class Bucket implements IBucket {
     }
   }
 
-  async put(objectName: string, putObjectBody: Readable, contentLength: number): Promise<void> {
+  async put(
+    objectName: string,
+    putObjectBody: Readable,
+    contentLength: number,
+  ): Promise<void> {
     const putObjectRequest: objectstorage.requests.PutObjectRequest = {
       namespaceName: this.bucketNamespace,
       bucketName: this.bucketName,

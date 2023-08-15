@@ -1,14 +1,9 @@
 {
   "restartable": "rs",
-  "ignore": [
-    ".git",
-    "node_modules/**/node_modules"
-  ],
+  "ignore": [".git", "node_modules/**/node_modules"],
   "verbose": true,
   "exec": "npm run build && node dist/app.js",
-  "watch": [
-    "src/"
-  ],
+  "watch": ["src/"],
   "env": {
     "NODE_ENV": "prod"
   },

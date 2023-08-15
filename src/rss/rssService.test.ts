@@ -38,7 +38,21 @@ test('getRss', async (t) => {
     },
   ];
 
-  const expectedRss = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><atom:link href="${cfg.host}/feed.rss&apos;" rel="self" type="application/rss+xml"/><title>${cfg.title}</title><link>${cfg.host}/&apos;</link><description>${cfg.description}</description><language>en-US</language><item><title>${fakePosts[0].title}</title><pubDate>${fakePosts[0].date.toUTCString()}</pubDate><guid isPermaLink="true">${cfg.host}/${fakePosts[0].slug}/</guid><description><![CDATA[${fakePosts[0].tweet}]]></description><link>${cfg.host}/${fakePosts[0].slug}/</link></item></channel></rss>`;
+  const expectedRss = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><atom:link href="${
+    cfg.host
+  }/feed.rss&apos;" rel="self" type="application/rss+xml"/><title>${
+    cfg.title
+  }</title><link>${cfg.host}/&apos;</link><description>${
+    cfg.description
+  }</description><language>en-US</language><item><title>${
+    fakePosts[0].title
+  }</title><pubDate>${fakePosts[0].date.toUTCString()}</pubDate><guid isPermaLink="true">${
+    cfg.host
+  }/${fakePosts[0].slug}/</guid><description><![CDATA[${
+    fakePosts[0].tweet
+  }]]></description><link>${cfg.host}/${
+    fakePosts[0].slug
+  }/</link></item></channel></rss>`;
 
   fakeGetPosts.resolves(fakePosts);
 
@@ -46,8 +60,10 @@ test('getRss', async (t) => {
 
   t.assert(t.deepEqual(rss, expectedRss));
 
-  t.assert(fakeGetPosts.calledOnceWith({
-    published: true,
-    tags: [],
-  }));
+  t.assert(
+    fakeGetPosts.calledOnceWith({
+      published: true,
+      tags: [],
+    }),
+  );
 });

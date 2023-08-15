@@ -7,7 +7,8 @@
     "build": "rm -rf dist && tsc -p ${NODE_ENV}.tsconfig.json && tscpaths -p ${NODE_ENV}.tsconfig.json -s ./src -o dist",
     "lint": "eslint src --ext .ts --fix",
     "test": "NODE_ENV=test npm run build && nyc ava -s",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "format": "prettier --write ."
   },
   "author": "toledompm",
   "license": "ISC",
@@ -27,6 +28,7 @@
     "eslint": "^8.30.0",
     "nodemon": "^2.0.20",
     "nyc": "^15.1.0",
+    "prettier": "^3.0.1",
     "sinon": "^15.0.1",
     "tscpaths": "^0.0.9",
     "typescript": "^4.9.4"

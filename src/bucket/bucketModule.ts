@@ -12,7 +12,11 @@ const ociObjectStorageClient = new objectstorage.ObjectStorageClient({
 
 const { imageBucket } = appConfig();
 
-const bucket = new Bucket(ociObjectStorageClient, imageBucket.namespace, imageBucket.name);
+const bucket = new Bucket(
+  ociObjectStorageClient,
+  imageBucket.namespace,
+  imageBucket.name,
+);
 const index = new FileIndex(imageBucket.index.file_path);
 const imageBucketService = new ImageBucketService(bucket, index);
 

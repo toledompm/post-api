@@ -16,7 +16,10 @@ export enum DatabaseType {
   NOTION,
 }
 
-const parseDatabaseTypeEnv = (env: string | undefined, defaultValue: DatabaseType) => {
+const parseDatabaseTypeEnv = (
+  env: string | undefined,
+  defaultValue: DatabaseType,
+) => {
   if (env === undefined) {
     return defaultValue;
   }
@@ -46,7 +49,10 @@ export const appConfig = () => ({
       description: process.env.RSS_DESCRIPTION || '',
     },
     database: {
-      type: parseDatabaseTypeEnv(process.env.DATABASE_TYPE, DatabaseType.NOTION),
+      type: parseDatabaseTypeEnv(
+        process.env.DATABASE_TYPE,
+        DatabaseType.NOTION,
+      ),
       notion: {
         databaseId: process.env.NOTION_DATABASE_ID || '',
         apiToken: process.env.NOTION_API_TOKEN || '',

@@ -27,7 +27,7 @@ test('get', async (t) => {
   t.assert(t.deepEqual(getResult, fakeIndexEntry.foo));
 });
 
-test('set', async(t) => {
+test('set', async (t) => {
   const fakeIndexEntry = { baz: 'xyz' };
   await fileIndex.set('baz', 'xyz');
 

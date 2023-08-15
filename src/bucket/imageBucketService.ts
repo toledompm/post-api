@@ -3,7 +3,10 @@ import type { IIndex } from '@index/types';
 import { Readable } from 'stream';
 
 export class ImageBucketService implements IImageBucketService {
-  constructor(private bucket: IBucket, private index: IIndex) {}
+  constructor(
+    private bucket: IBucket,
+    private index: IIndex,
+  ) {}
 
   async getBucketUrl(url: string): Promise<string> {
     const strippedUrl = stripUrl(url);
@@ -16,7 +19,7 @@ export class ImageBucketService implements IImageBucketService {
 
     const bucketKey = generateBucketKey(strippedUrl);
 
-    if (!await this.bucket.head(bucketKey)) {
+    if (!(await this.bucket.head(bucketKey))) {
       await this.saveToBucket(url, bucketKey);
     }
 
@@ -41,7 +44,9 @@ function generateBucketKey(stripedUrl: string): string {
   return `images/${stripedUrl.replaceAll('/', '-')}`;
 }
 
-async function downloadImage(url: string): Promise<{ stream: Readable, contentLength: number }> {
+async function downloadImage(
+  url: string,
+): Promise<{ stream: Readable; contentLength: number }> {
   const res = await fetch(url);
 
   if (!res.body) {

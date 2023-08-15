@@ -13,17 +13,15 @@ export class FileIndex implements IIndex {
 
     const keyMatches = new Transform({
       transform(chunk, _, done) {
-        const lineObj: Record<string, any> = JSON.parse(chunk.toString() as string);
+        const lineObj: Record<string, any> = JSON.parse(
+          chunk.toString() as string,
+        );
         if (Object.keys(lineObj).includes(key)) indexValue = lineObj[key];
         done(null, null);
       },
     });
 
-    await pipeline(
-      createReadStream(this.filePath),
-      split2(),
-      keyMatches,
-    );
+    await pipeline(createReadStream(this.filePath), split2(), keyMatches);
 
     return indexValue;
   }

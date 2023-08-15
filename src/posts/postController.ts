@@ -2,7 +2,10 @@ import { controllerErrorHandler } from '@common/errors';
 import type { IPostService } from '@posts/types';
 import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
 
-export const genPostRoutes = (postService: IPostService, routePrefix: string): FastifyPluginAsync => {
+export const genPostRoutes = (
+  postService: IPostService,
+  routePrefix: string,
+): FastifyPluginAsync => {
   return (instance) => {
     instance.get(`${routePrefix}`, {
       handler: async (
@@ -21,7 +24,11 @@ export const genPostRoutes = (postService: IPostService, routePrefix: string): F
 
           const posts = await postService.getPosts(filter);
 
-          void res.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=1800');
+          void res.header(
+            'Cache-Control',
+            'public, max-age=3600, stale-while-revalidate=1800',
+          );
+
           await res.send(posts);
         };
 
@@ -47,7 +54,7 @@ export const genPostRoutes = (postService: IPostService, routePrefix: string): F
 
     instance.get(`${routePrefix}/:pageID`, {
       handler: async (
-        req:FastifyRequest<{
+        req: FastifyRequest<{
           Params: { pageID: string };
         }>,
         res,
@@ -55,7 +62,11 @@ export const genPostRoutes = (postService: IPostService, routePrefix: string): F
         const callback = async () => {
           const post = await postService.getPostContent(req.params.pageID);
 
-          void res.header('Cache-Control', 'public, max-age=86400, stale-while-revalidate=3600');
+          void res.header(
+            'Cache-Control',
+            'public, max-age=86400, stale-while-revalidate=3600',
+          );
+
           await res.send(post);
         };
 

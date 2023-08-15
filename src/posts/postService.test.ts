@@ -56,10 +56,12 @@ test('getPosts', async (t) => {
   });
   t.assert(t.deepEqual(posts, expectedPosts));
 
-  t.assert(fakeGetPosts.calledOnceWith({
-    published: false,
-    tags: [],
-  }));
+  t.assert(
+    fakeGetPosts.calledOnceWith({
+      published: false,
+      tags: [],
+    }),
+  );
 });
 
 test('getPostContent', async (t) => {

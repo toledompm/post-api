@@ -50,13 +50,17 @@ test('getBucketURL - non-indexed image', async (t) => {
   t.assert(t.deepEqual(bucketPrefix, expectedImageBucketResponse));
   t.assert(mockIndex.get.calledOnceWith(mockStrippedURL));
   t.assert(mockBucket.head.calledOnceWith(expectedImageBucketResponse));
-  t.assert(mockIndex.set.calledOnceWith(mockStrippedURL, expectedImageBucketResponse));
+
+  t.assert(
+    mockIndex.set.calledOnceWith(mockStrippedURL, expectedImageBucketResponse),
+  );
 });
 
 test('getBucketURL - non-published image', async (t) => {
   const mockURL = 'https://fastly.picsum.photos/id/866/20/20.jpg';
   const mockStrippedURL = 'fastly.picsum.photos/id/866/20/20.jpg';
-  const expectedImageBucketResponse = 'images/fastly.picsum.photos-id-866-20-20.jpg';
+  const expectedImageBucketResponse =
+    'images/fastly.picsum.photos-id-866-20-20.jpg';
 
   mockIndex.get.resolves(null);
   mockBucket.head.resolves(false);
@@ -67,6 +71,16 @@ test('getBucketURL - non-published image', async (t) => {
   t.assert(t.deepEqual(bucketPrefix, expectedImageBucketResponse));
   t.assert(mockIndex.get.calledOnceWith(mockStrippedURL));
   t.assert(mockBucket.head.calledOnceWith(expectedImageBucketResponse));
-  t.assert(mockBucket.put.calledWith(expectedImageBucketResponse, Sinon.match(Readable), 19));
-  t.assert(mockIndex.set.calledOnceWith(mockStrippedURL, expectedImageBucketResponse));
+
+  t.assert(
+    mockBucket.put.calledWith(
+      expectedImageBucketResponse,
+      Sinon.match(Readable),
+      19,
+    ),
+  );
+
+  t.assert(
+    mockIndex.set.calledOnceWith(mockStrippedURL, expectedImageBucketResponse),
+  );
 });

@@ -8,7 +8,10 @@ export class NotFoundError extends Error {
   }
 }
 
-export const controllerErrorHandler = async(res: FastifyReply, callback: () => Promise<void>) => {
+export const controllerErrorHandler = async (
+  res: FastifyReply,
+  callback: () => Promise<void>,
+) => {
   try {
     await callback();
   } catch (error) {

@@ -6,5 +6,9 @@ export interface IImageBucketService {
 
 export interface IBucket {
   head(objectKey: string): Promise<boolean>;
-  put(objectKey: string, stream: Readable, contentLength: number): Promise<void>;
+  put(
+    objectKey: string,
+    stream: Readable,
+    contentLength: number,
+  ): Promise<void>;
 }

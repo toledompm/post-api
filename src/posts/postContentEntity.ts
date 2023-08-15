@@ -35,7 +35,7 @@ export function isIPostContentHeading(
   return obj.heading !== undefined;
 }
 
-export function isIPostContentParagraph (
+export function isIPostContentParagraph(
   obj: Record<string, any>,
 ): obj is IPostContentParagraph {
   return obj.paragraph !== undefined;

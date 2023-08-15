@@ -1,9 +1,9 @@
 import type { IIndex } from '@index/types';
 import { createReadStream } from 'fs';
-import split2 from 'split2';
-import { pipeline } from 'stream/promises';
-import { Transform } from 'stream';
 import { appendFile } from 'fs/promises';
+import split2 from 'split2';
+import { Transform } from 'stream';
+import { pipeline } from 'stream/promises';
 
 export class FileIndex implements IIndex {
   constructor(private filePath: string) {}

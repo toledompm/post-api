@@ -8,7 +8,8 @@
   "extends": ["@quero/eslint-config-typescript"],
   "root": true,
   "rules": {
-    "max-classes-per-file": "off"
+    "max-classes-per-file": "off",
+    "arrow-parens": ["error", "always"]
   },
   "env": {
     "node": true,

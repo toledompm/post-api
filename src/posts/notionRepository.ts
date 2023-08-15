@@ -48,7 +48,6 @@ export class NotionRepository implements IPostRepository {
           { propName: 'Tags', outputField: 'tags' },
           { propName: 'Id', outputField: 'id' },
           { propName: 'Date', outputField: 'date' },
-          { propName: 'Slug', outputField: 'slug' },
           { propName: 'Tweet', outputField: 'tweet' },
           { propName: 'ImageURL', outputField: 'imageUrl' },
           { propName: 'ImageAlt', outputField: 'imageAlt' },

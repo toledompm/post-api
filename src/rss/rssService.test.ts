@@ -31,7 +31,6 @@ test('getRss', async (t) => {
       published: true,
       date: new Date(),
       tags: ['tag1', 'tag2'],
-      slug: 'post-slug',
       tweet: 'this tweet is a short description of the post',
       imageUrl: 'https://image.com',
       imageAlt: 'image alt',
@@ -48,10 +47,10 @@ test('getRss', async (t) => {
     fakePosts[0].title
   }</title><pubDate>${fakePosts[0].date.toUTCString()}</pubDate><guid isPermaLink="true">${
     cfg.host
-  }/${fakePosts[0].slug}/</guid><description><![CDATA[${
+  }/${fakePosts[0].id}/</guid><description><![CDATA[${
     fakePosts[0].tweet
   }]]></description><link>${cfg.host}/${
-    fakePosts[0].slug
+    fakePosts[0].id
   }/</link></item></channel></rss>`;
 
   fakeGetPosts.resolves(fakePosts);

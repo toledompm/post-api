@@ -4,7 +4,6 @@ export interface IPostInfo {
   published: boolean;
   date: Date;
   tags: string[];
-  slug: string;
   tweet: string;
   imageUrl: string;
   imageAlt: string;

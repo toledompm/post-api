@@ -74,11 +74,11 @@ export class RssService implements IRssService {
           {
             guid: [
               { _attr: { isPermaLink: true } },
-              `${this.cfg.host}/${post.slug}/`,
+              `${this.cfg.host}/${post.id}/`,
             ],
           },
           { description: { _cdata: post.tweet } },
-          { link: `${this.cfg.host}/${post.slug}/` },
+          { link: `${this.cfg.host}/${post.id}/` },
         ],
       };
     });

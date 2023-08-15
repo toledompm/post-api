@@ -6,7 +6,6 @@ class PostInfoEntity implements IPostInfo {
   tags: string[];
   id: string;
   date: Date;
-  slug: string;
   tweet: string;
   imageUrl: string;
   imageAlt: string;
@@ -17,7 +16,6 @@ class PostInfoEntity implements IPostInfo {
     this.tags = props.tags || [];
     this.id = props.id || '';
     this.date = props.date || new Date();
-    this.slug = props.slug || '';
     this.tweet = props.tweet || '';
     this.imageUrl = props.imageUrl || '';
     this.imageAlt = props.imageAlt || '';

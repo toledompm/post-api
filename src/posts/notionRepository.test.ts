@@ -26,7 +26,6 @@ test.beforeEach(async () => {
     tags: props.tags || [],
     id: props.id || '',
     date: new Date('2021-01-01'),
-    slug: props.slug || '',
     tweet: props.tweet || '',
     imageUrl: props.imageUrl || '',
     imageAlt: props.imageAlt || '',
@@ -142,29 +141,6 @@ test('getPosts', async (t) => {
           end: null,
         },
       },
-      Slug: {
-        id: '%5B%3E%3Fn',
-        type: 'rich_text',
-        rich_text: [
-          {
-            type: 'text',
-            text: {
-              content: 'post-slug',
-              link: null,
-            },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'post-slug',
-            href: null,
-          },
-        ],
-      },
       Tweet: {
         id: '%5B%3E%3Fn',
         type: 'rich_text',
@@ -252,7 +228,6 @@ test('getPosts', async (t) => {
         published: true,
         date: new Date(dateString),
         tags: ['tag1', 'tag2'],
-        slug: 'post-slug',
         tweet: 'This is a tweet that brifely describes the post.',
         imageUrl: '/placeholder.png',
         imageAlt: 'Some image alt',

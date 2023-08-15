@@ -1,3 +1,4 @@
+import { bucketModule } from '@bucket/bucketModule';
 import { DatabaseType, appConfig } from '@common/config';
 import { Client } from '@notionhq/client';
 import { NotionRepository } from '@posts/notionRepository';
@@ -5,21 +6,40 @@ import { postContentFactory } from '@posts/postContentEntity';
 import { genPostRoutes } from '@posts/postController';
 import { postInfoFactory } from '@posts/postInfoEntity';
 import { PostService } from '@posts/postService';
-import type { IPostRepository, IPostService, PostContentFactory, PostInfoFactory } from '@posts/types';
+import type {
+  IPostRepository,
+  IPostService,
+  PostContentFactory,
+  PostInfoFactory,
+} from '@posts/types';
 
 const { post: postConfig } = appConfig();
 
-const postServiceFactory = (postRepository: IPostRepository): IPostService => new PostService(postRepository);
+const postServiceFactory = (postRepository: IPostRepository): IPostService =>
+  new PostService(postRepository, bucketModule.exports.imageBucketService);
 
-const notionRepositoryFactory = (opts: { apiToken: string, databaseId: string, postInfoFactory: PostInfoFactory, postContentFactory: PostContentFactory }): IPostRepository => {
+const notionRepositoryFactory = (opts: {
+  apiToken: string;
+  databaseId: string;
+  postInfoFactory: PostInfoFactory;
+  postContentFactory: PostContentFactory;
+}): IPostRepository => {
   const client = new Client({ auth: opts.apiToken });
-  return new NotionRepository(client, opts.postInfoFactory, opts.postContentFactory, opts.databaseId);
+  return new NotionRepository(
+    client,
+    opts.postInfoFactory,
+    opts.postContentFactory,
+    opts.databaseId,
+  );
 };
 
 const repositoryMapping = {
   [DatabaseType.NOTION]: {
-   factory: notionRepositoryFactory,
-   opts: { apiToken: postConfig.database.notion.apiToken, databaseId: postConfig.database.notion.databaseId },
+    factory: notionRepositoryFactory,
+    opts: {
+      apiToken: postConfig.database.notion.apiToken,
+      databaseId: postConfig.database.notion.databaseId,
+    },
   },
 };
 

@@ -1,4 +1,9 @@
-import type { IPostContent, IPostContentHeading, IPostContentParagraph } from '@posts/types';
+import type {
+  IPostContent,
+  IPostContentHeading,
+  IPostContentImage,
+  IPostContentParagraph,
+} from '@posts/types';
 
 class PostContentHeading implements IPostContentHeading {
   heading: string;
@@ -16,21 +21,43 @@ class PostContentParagraph implements IPostContentParagraph {
   }
 }
 
-const isIPostContentHeading = (obj: Record<string, any>): obj is IPostContentHeading => {
-  return obj.heading !== undefined;
-};
+class PostContentImage implements IPostContentImage {
+  image: { url: string; caption: string };
 
-const isIPostContentParagraph = (obj: Record<string, any>): obj is IPostContentParagraph => {
+  constructor(props: Partial<IPostContentImage>) {
+    this.image = props.image || { url: '', caption: '' };
+  }
+}
+
+export function isIPostContentHeading(
+  obj: Record<string, any>,
+): obj is IPostContentHeading {
+  return obj.heading !== undefined;
+}
+
+export function isIPostContentParagraph(
+  obj: Record<string, any>,
+): obj is IPostContentParagraph {
   return obj.paragraph !== undefined;
-};
+}
+
+export function isIPostContentImage(
+  obj: Record<string, any>,
+): obj is IPostContentImage {
+  return obj.image !== undefined;
+}
 
 export const postContentFactory = (props: Partial<IPostContent>) => {
   if (isIPostContentHeading(props)) {
     return new PostContentHeading(props);
   }
 
- if (isIPostContentParagraph(props)) {
+  if (isIPostContentParagraph(props)) {
     return new PostContentParagraph(props);
+  }
+
+  if (isIPostContentImage(props)) {
+    return new PostContentImage(props);
   }
 
   throw new Error('Invalid post content');

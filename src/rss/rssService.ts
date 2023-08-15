@@ -8,20 +8,17 @@ type FeedItem = {
     { title: string },
     { pubDate: string },
     {
-      guid: [
-        { _attr: { isPermaLink: boolean } },
-        string,
-      ],
+      guid: [{ _attr: { isPermaLink: boolean } }, string];
     },
     { description: { _cdata: string } },
     { link: string },
-  ],
+  ];
 };
 
 export class RssService implements IRssService {
   constructor(
     private postService: IPostService,
-    private cfg: { host: string, title: string, description: string },
+    private cfg: { host: string; title: string; description: string },
   ) {}
 
   async getRss(): Promise<string> {
@@ -50,7 +47,7 @@ export class RssService implements IRssService {
             { link: `${this.cfg.host}/'` },
             { description: this.cfg.description },
             { language: 'en-US' },
-            ... await this.buildFeedItems(),
+            ...(await this.buildFeedItems()),
           ],
         },
       ],
@@ -60,7 +57,10 @@ export class RssService implements IRssService {
   }
 
   private async buildFeedItems(): Promise<FeedItem[]> {
-    const posts = await this.postService.getPosts({ published: true, tags: [] });
+    const posts = await this.postService.getPosts({
+      published: true,
+      tags: [],
+    });
 
     const sortedPosts = posts.sort((first, second) => {
       return second.date.getTime() - first.date.getTime();

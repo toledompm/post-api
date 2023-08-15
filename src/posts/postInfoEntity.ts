@@ -24,4 +24,5 @@ class PostInfoEntity implements IPostInfo {
   }
 }
 
-export const postInfoFactory = (props: Partial<IPostInfo>) => new PostInfoEntity(props);
+export const postInfoFactory = (props: Partial<IPostInfo>) =>
+  new PostInfoEntity(props);

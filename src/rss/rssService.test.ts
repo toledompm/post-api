@@ -44,7 +44,7 @@ test('getRss', async (t) => {
 
   const rss = await rssService.getRss();
 
-  t.deepEqual(rss, expectedRss);
+  t.assert(t.deepEqual(rss, expectedRss));
 
   t.assert(fakeGetPosts.calledOnceWith({
     published: true,

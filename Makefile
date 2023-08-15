@@ -11,6 +11,7 @@ docker-dev: ## Run the app in development mode
 		--rm \
 		-it \
 		-v "$(PWD):/app" \
+		-v "./.oci:/root/.oci" \
 		-w /app \
 		-p 3030:3030 \
 		--env-file .env \
@@ -23,6 +24,7 @@ docker-test: ## Run app unit tests
 		--rm \
 		-it \
 		-v "$(PWD):/app" \
+		-v "./.oci:/root/.oci" \
 		-w /app \
 		--env-file .env \
 		"$(IMG_NAME):$(IMG_TAG)" \
@@ -34,6 +36,7 @@ docker-shell: ## Run container shell
 		--rm \
 		-it \
 		-v "$(PWD):/app" \
+		-v "./.oci/:/root/.oci/" \
 		-w /app \
 		--env-file .env \
 		-p 3030:3000 \

@@ -232,7 +232,7 @@ test('getPosts', async (t) => {
     tags: ['tag1', 'tag2'],
   });
 
-  t.deepEqual(posts, [
+  t.assert(t.deepEqual(posts, [
     {
       id: 'post-id',
       title: 'title test',
@@ -244,9 +244,9 @@ test('getPosts', async (t) => {
       imageUrl: '/placeholder.png',
       imageAlt: 'Some image alt',
     },
-  ]);
+  ]));
 
-  t.deepEqual(notionClientDatabasesQueryStub.getCalls()[0].firstArg, {
+  t.assert(t.deepEqual(notionClientDatabasesQueryStub.getCalls()[0].firstArg, {
     database_id: DATABASE_ID,
     filter: {
       and: [
@@ -270,7 +270,7 @@ test('getPosts', async (t) => {
         },
       ],
     },
-  });
+  }));
 });
 
 test('getPostContent', async (t) => {
@@ -348,7 +348,7 @@ test('getPostContent', async (t) => {
   const postID = 'somepostid';
   const postContent = await notionRepository.getPostContent(postID);
 
-  t.deepEqual(postContent, [
+  t.assert(t.deepEqual(postContent, [
     {
       heading: 'TEST TITLE',
       paragraph: undefined,
@@ -357,13 +357,13 @@ test('getPostContent', async (t) => {
       heading: undefined,
       paragraph: 'This is a text paragraph',
     },
-  ]);
+  ]));
 
-  t.deepEqual(notionClientBlocksChildrenListStub.getCalls()[0].firstArg, {
+  t.assert(t.deepEqual(notionClientBlocksChildrenListStub.getCalls()[0].firstArg, {
     block_id: mockPartialPageResponse.id,
-  });
+  }));
 
-  t.deepEqual(notionClientDatabasesQueryStub.getCalls()[0].firstArg, {
+  t.assert(t.deepEqual(notionClientDatabasesQueryStub.getCalls()[0].firstArg, {
     database_id: DATABASE_ID,
     filter: {
       and: [
@@ -375,5 +375,5 @@ test('getPostContent', async (t) => {
         },
       ],
     },
-  });
+  }));
 });

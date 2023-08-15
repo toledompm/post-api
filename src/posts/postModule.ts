@@ -1,3 +1,4 @@
+import { bucketModule } from '@bucket/bucketModule';
 import { DatabaseType, appConfig } from '@common/config';
 import { Client } from '@notionhq/client';
 import { NotionRepository } from '@posts/notionRepository';
@@ -9,7 +10,7 @@ import type { IPostRepository, IPostService, PostContentFactory, PostInfoFactory
 
 const { post: postConfig } = appConfig();
 
-const postServiceFactory = (postRepository: IPostRepository): IPostService => new PostService(postRepository);
+const postServiceFactory = (postRepository: IPostRepository): IPostService => new PostService(postRepository, bucketModule.exports.imageBucketService);
 
 const notionRepositoryFactory = (opts: { apiToken: string, databaseId: string, postInfoFactory: PostInfoFactory, postContentFactory: PostContentFactory }): IPostRepository => {
   const client = new Client({ auth: opts.apiToken });

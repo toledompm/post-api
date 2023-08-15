@@ -1,7 +1,7 @@
 import { logger } from '@common/logger';
 import type { Client } from '@notionhq/client';
 import { isFullBlock, isFullPage } from '@notionhq/client';
-import type { CheckboxPropertyItemObjectResponse, DatePropertyItemObjectResponse, Heading1BlockObjectResponse, MultiSelectPropertyItemObjectResponse, PageObjectResponse, ParagraphBlockObjectResponse, RichTextItemResponse } from '@notionhq/client/build/src/api-endpoints';
+import type { CheckboxPropertyItemObjectResponse, DatePropertyItemObjectResponse, Heading1BlockObjectResponse, ImageBlockObjectResponse, MultiSelectPropertyItemObjectResponse, PageObjectResponse, ParagraphBlockObjectResponse, RichTextItemResponse } from '@notionhq/client/build/src/api-endpoints';
 import type { IPostContent, IPostInfo, IPostRepository, PostContentFactory, PostFilter, PostInfoFactory } from '@posts/types';
 
 export class NotionRepository implements IPostRepository {
@@ -60,8 +60,10 @@ export class NotionRepository implements IPostRepository {
         list.push(this.postContentFactory({ heading: parseHeading1Block(result) }));
       } else if (isParagraphBlock(result)) {
         list.push(this.postContentFactory({ paragraph: parseParagraphBlock(result) }));
+      } else if (isImageBlock(result)) {
+        list.push(this.postContentFactory({ image: parseImageBlock(result) }));
       } else {
-        logger.error(`Unknown block type: ${result.type}`);
+        logger.error(`Unknown block type: ${result.type} - ${JSON.stringify(result, null, 2)})}}`);
       }
 
       return list;
@@ -119,13 +121,14 @@ function parseNotionProps<T>(notionResponse: PageObjectResponse, props: { propNa
     const prop = notionResponse.properties[propName];
     if (!prop) return acc;
 
-    let parsedProp: boolean | string | string[] | Date;
+    let parsedProp: boolean | string | string[] | Date | { caption: string, url: string } = '';
 
     if (isCheckboxProp(prop)) parsedProp = parseCheckboxProp(prop);
     else if (isTitleProp(prop)) parsedProp = parseTitleProp(prop);
     else if (isMultiselectProp(prop)) parsedProp = parseMultiselectProp(prop);
     else if (isRichTextProduct(prop)) parsedProp = parseRichTextProp(prop);
     else if (isDateProp(prop)) parsedProp = parseDateProp(prop);
+    else if (isImageBlock(prop)) parsedProp = parseImageBlock(prop);
     else throw new Error(`Unknown prop type: ${prop.type}`);
 
     return {
@@ -185,10 +188,20 @@ function isParagraphBlock(block: Record<string, any>): block is ParagraphBlockOb
   return block.type === 'paragraph';
 }
 
+function isImageBlock(block: Record<string, any>): block is ParagraphBlockObjectResponse {
+  return block.type === 'image';
+}
+
 function parseHeading1Block(block: Heading1BlockObjectResponse): string {
   return block.heading_1.rich_text[0]?.plain_text || '';
 }
 
 function parseParagraphBlock(block: ParagraphBlockObjectResponse): string {
   return block.paragraph.rich_text[0]?.plain_text || '';
+}
+
+function parseImageBlock(block: ImageBlockObjectResponse): { caption: string, url: string, metaUrl: string } {
+  const caption = block.image.caption[0]?.plain_text || '';
+  const url = block.image.type === 'external' ? block.image.external.url : block.image.file.url;
+  return { caption, url, metaUrl: '' };
 }

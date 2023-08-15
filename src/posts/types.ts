@@ -16,13 +16,21 @@ export interface IPostContentHeading {
   heading: string;
 }
 
-export type PostContentFactory = (props: Partial<IPostContent>) => IPostContent;
-
 export interface IPostContentParagraph {
   paragraph: string;
 }
 
-export type IPostContent = IPostContentHeading | IPostContentParagraph;
+export interface IPostContentImage {
+  image: {
+    url: string;
+    caption: string;
+    metaUrl: string;
+  }
+}
+
+export type PostContentFactory = (props: Partial<IPostContent>) => IPostContent;
+
+export type IPostContent = IPostContentHeading | IPostContentParagraph | IPostContentImage;
 
 export type PostFilter = Pick<IPostInfo, 'published' | 'tags'>;
 

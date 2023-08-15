@@ -22,10 +22,10 @@ class PostContentParagraph implements IPostContentParagraph {
 }
 
 class PostContentImage implements IPostContentImage {
-  image: { url: string; caption: string, metaUrl: string };
+  image: { url: string; caption: string };
 
   constructor(props: Partial<IPostContentImage>) {
-    this.image = props.image || { url: '', caption: '', metaUrl: '' };
+    this.image = props.image || { url: '', caption: '' };
   }
 }
 

@@ -5,38 +5,30 @@ import { Readable } from 'stream';
 export class ImageBucketService implements IImageBucketService {
   constructor(private bucket: IBucket, private index: IIndex) {}
 
-  async getBucketUrl(url: string): Promise<{ url: string, metaUrl: string }> {
+  async getBucketUrl(url: string): Promise<string> {
     const strippedUrl = stripUrl(url);
 
     const search = await this.index.get(strippedUrl);
 
     if (search) {
-      return { url: search, metaUrl: generateMetaFileName(search) };
+      return search;
     }
 
     const bucketKey = generateBucketKey(strippedUrl);
-    const metaFileBucketKey = generateMetaFileName(bucketKey);
 
     if (!await this.bucket.head(bucketKey)) {
-      await this.saveToBucket(url, bucketKey, metaFileBucketKey);
+      await this.saveToBucket(url, bucketKey);
     }
 
     await this.index.set(strippedUrl, bucketKey);
 
-    return { url: bucketKey, metaUrl: metaFileBucketKey };
+    return bucketKey;
   }
 
-  private async saveToBucket(url: string, bucketKey: string, metaFileBucketKey: string): Promise<void[]> {
-    const { stream, contentLength, extension } = await downloadImage(url);
+  private async saveToBucket(url: string, bucketKey: string): Promise<void> {
+    const { stream, contentLength } = await downloadImage(url);
 
-    const imageMetadata = { extension };
-    const imageMetadataBuffer = Buffer.from(JSON.stringify(imageMetadata));
-    const imageMetadataBufferReadable = Readable.from(imageMetadataBuffer);
-
-    return Promise.all([
-      this.bucket.put(metaFileBucketKey, imageMetadataBufferReadable, imageMetadataBuffer.length),
-      this.bucket.put(bucketKey, stream, contentLength),
-    ]);
+    return this.bucket.put(bucketKey, stream, contentLength);
   }
 }
 
@@ -49,11 +41,7 @@ function generateBucketKey(stripedUrl: string): string {
   return `images/${stripedUrl.replaceAll('/', '-')}`;
 }
 
-function generateMetaFileName(fileName: string): string {
-  return `${fileName}.meta`;
-}
-
-async function downloadImage(url: string): Promise<{ stream: Readable, contentLength: number, extension: string }> {
+async function downloadImage(url: string): Promise<{ stream: Readable, contentLength: number }> {
   const res = await fetch(url);
 
   if (!res.body) {
@@ -73,15 +61,5 @@ async function downloadImage(url: string): Promise<{ stream: Readable, contentLe
 
   const contentLength = Number(contentLengthString);
 
-  const contentTypeString = res.headers.get('content-type');
-
-  let extension = '';
-
-  if (contentTypeString === 'image/jpeg') {
-    extension = '.jpeg';
-  } else if (contentTypeString === 'image/png') {
-    extension = '.png';
-  }
-
-  return { stream, contentLength, extension };
+  return { stream, contentLength };
 }

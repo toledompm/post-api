@@ -25,6 +25,7 @@ test.beforeEach(() => {
 });
 
 test('getPosts', async (t) => {
+  const fakeBucketImage = 'https://new-image.com';
   const fakePosts: IPostInfo[] = [
     {
       id: '1',
@@ -39,13 +40,21 @@ test('getPosts', async (t) => {
     },
   ];
 
+  const expectedPosts = [
+    {
+      ...fakePosts[0],
+      imageUrl: fakeBucketImage,
+    },
+  ];
+
   fakeGetPosts.resolves(fakePosts);
+  fakeGetBucketUrl.resolves(fakeBucketImage);
 
   const posts = await postService.getPosts({
     published: false,
     tags: [],
   });
-  t.assert(t.deepEqual(posts, fakePosts));
+  t.assert(t.deepEqual(posts, expectedPosts));
 
   t.assert(fakeGetPosts.calledOnceWith({
     published: false,
@@ -54,7 +63,7 @@ test('getPosts', async (t) => {
 });
 
 test('getPostContent', async (t) => {
-  const fakeBucketImage = { url: 'https://new-image.com', metaUrl: 'https://new-image.com.meta' };
+  const fakeBucketImage = 'https://new-image.com';
   const fakeContent: IPostContent[] = [
     {
       heading: 'heading',
@@ -66,7 +75,6 @@ test('getPostContent', async (t) => {
       image: {
         url: 'https://image.com',
         caption: 'caption',
-        metaUrl: 'https://image.com.meta',
       },
     },
   ];
@@ -80,9 +88,8 @@ test('getPostContent', async (t) => {
     },
     {
       image: {
-        url: fakeBucketImage.url,
+        url: fakeBucketImage,
         caption: 'caption',
-        metaUrl: fakeBucketImage.metaUrl,
       },
     },
   ];

@@ -24,7 +24,6 @@ export interface IPostContentImage {
   image: {
     url: string;
     caption: string;
-    metaUrl: string;
   }
 }
 

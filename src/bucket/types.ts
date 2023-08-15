@@ -1,7 +1,7 @@
 import type { Readable } from 'stream';
 
 export interface IImageBucketService {
-  getBucketUrl(url: string): Promise<{ url: string, metaUrl: string }>;
+  getBucketUrl(url: string): Promise<string>;
 }
 
 export interface IBucket {

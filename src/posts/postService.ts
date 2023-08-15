@@ -10,7 +10,12 @@ export class PostService implements IPostService {
     const postInfo = await this.postRepository.getPosts(filter);
     if (postInfo === null) throw new NotFoundError('PostInfo not found');
 
-    return postInfo;
+    const parsedPostInfo = await Promise.all([...postInfo].map(async (info) => {
+      if (info.imageUrl.includes('http')) info.imageUrl = await this.imageBucketService.getBucketUrl(info.imageUrl);
+      return info;
+    }));
+
+    return parsedPostInfo;
   }
 
   async getPostContent(pageId: string): Promise<IPostContent[]> {
@@ -19,7 +24,7 @@ export class PostService implements IPostService {
 
     const parsedPostContent = await Promise.all([...postContent].map(async (content) => {
       if (isIPostContentImage(content)) {
-        content.image = { ...content.image, ...(await this.imageBucketService.getBucketUrl(content.image.url)) };
+        content.image.url = await this.imageBucketService.getBucketUrl(content.image.url);
       }
 
       return content;

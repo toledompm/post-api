@@ -200,8 +200,8 @@ function parseParagraphBlock(block: ParagraphBlockObjectResponse): string {
   return block.paragraph.rich_text[0]?.plain_text || '';
 }
 
-function parseImageBlock(block: ImageBlockObjectResponse): { caption: string, url: string, metaUrl: string } {
+function parseImageBlock(block: ImageBlockObjectResponse): { caption: string, url: string } {
   const caption = block.image.caption[0]?.plain_text || '';
   const url = block.image.type === 'external' ? block.image.external.url : block.image.file.url;
-  return { caption, url, metaUrl: '' };
+  return { caption, url };
 }

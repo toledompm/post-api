@@ -87,7 +87,7 @@ export class NotionRepository implements IPostRepository {
             result,
             null,
             2,
-          )})}}`,
+          )}`,
         );
       }
 

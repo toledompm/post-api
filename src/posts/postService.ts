@@ -20,7 +20,7 @@ export class PostService implements IPostService {
     if (postInfo === null) throw new NotFoundError('PostInfo not found');
 
     const parsedPostInfo = await Promise.all(
-      [...postInfo].map(async (info) => {
+      postInfo.map(async (info) => {
         if (info.imageUrl.includes('http')) {
           info.imageUrl = await this.imageBucketService.getBucketUrl(
             info.imageUrl,
@@ -39,7 +39,7 @@ export class PostService implements IPostService {
     if (postContent === null) throw new NotFoundError('PostContent not found');
 
     const parsedPostContent = await Promise.all(
-      [...postContent].map(async (content) => {
+      postContent.map(async (content) => {
         if (isIPostContentImage(content)) {
           content.image.url = await this.imageBucketService.getBucketUrl(
             content.image.url,

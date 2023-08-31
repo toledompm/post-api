@@ -22,6 +22,9 @@ spec:
       tag: "0.3.0"
 
     secretEnv: post-api-env
+    secretFiles:
+      - name: post-api-secret
+        mountPath: /root/
 
     service:
       type: ClusterIP

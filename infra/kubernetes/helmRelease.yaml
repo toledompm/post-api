@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: app
-      version: ">=0.0.0 <1.0.0"
+      version: "0.x.x"
       sourceRef:
         kind: HelmRepository
         name: homelab

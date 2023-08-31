@@ -1,0 +1,51 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: post-api
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app
+      version: ">=0.0.0 <1.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: homelab
+      interval: 1m
+  upgrade:
+    remediation:
+      remediateLastFailure: true
+  values:
+    image:
+      repository: "ghcr.io/toledompm/post-api"
+      pullPolicy: IfNotPresent
+      tag: "0.3.0"
+
+    secretEnv: post-api-env
+
+    service:
+      type: ClusterIP
+      port: 3030
+
+    ingress:
+      enabled: true
+      hosts:
+        - host: blog.toledompm.xyz
+          paths:
+            - path: /api
+              pathType: Prefix
+
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 4
+      targetCPUUtilizationPercentage: 80
+      targetMemoryUtilizationPercentage: 80

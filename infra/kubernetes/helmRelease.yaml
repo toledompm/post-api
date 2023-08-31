@@ -23,8 +23,8 @@ spec:
 
     secretEnv: post-api-env
     secretFiles:
-      - name: post-api-secret
-        mountPath: /root/
+      - name: post-api-oci
+        mountPath: /root/.oci/
 
     service:
       type: ClusterIP

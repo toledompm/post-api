@@ -32,8 +32,11 @@ spec:
 
     ingress:
       enabled: true
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: blog-api.toledompm.xyz
+        external-dns.alpha.kubernetes.io/target: k3s.toledompm.xyz
       hosts:
-        - host: blog.toledompm.xyz
+        - host: blog-api.toledompm.xyz
           paths:
             - path: /api
               pathType: Prefix

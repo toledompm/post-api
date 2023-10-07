@@ -38,7 +38,7 @@ spec:
       enabled: true
       annotations:
         external-dns.alpha.kubernetes.io/hostname: blog-api.toledompm.xyz
-        external-dns.alpha.kubernetes.io/target: k3s.toledompm.xyz
+        external-dns.alpha.kubernetes.io/target: cluster.toledompm.xyz
       hosts:
         - host: blog-api.toledompm.xyz
           paths:

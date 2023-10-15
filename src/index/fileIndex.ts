@@ -21,7 +21,15 @@ export class FileIndex implements IIndex {
       },
     });
 
-    await pipeline(createReadStream(this.filePath), split2(), keyMatches);
+    try {
+      await pipeline(createReadStream(this.filePath), split2(), keyMatches);
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException)?.code === 'ENOENT') {
+        return indexValue;
+      }
+
+      throw err;
+    }
 
     return indexValue;
   }

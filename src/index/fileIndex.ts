@@ -1,15 +1,12 @@
 import type { IIndex } from '@index/types';
-import { createReadStream, appendFileSync } from 'fs';
+import { createReadStream } from 'fs';
 import { appendFile } from 'fs/promises';
 import split2 from 'split2';
 import { Transform } from 'stream';
 import { pipeline } from 'stream/promises';
 
 export class FileIndex implements IIndex {
-  constructor(private filePath: string) {
-    // Create file if it doesn't exist
-    appendFileSync(this.filePath, '');
-  }
+  constructor(private filePath: string) {}
 
   async get(key: string): Promise<string | null> {
     let indexValue = null;

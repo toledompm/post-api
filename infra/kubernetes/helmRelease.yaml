@@ -23,7 +23,7 @@ spec:
     image:
       repository: "ghcr.io/toledompm/post-api"
       pullPolicy: IfNotPresent
-      tag: "0.3.0"
+      tag: "0.4.1"
 
     secretEnv: post-api-env
     secretFiles:
@@ -33,6 +33,18 @@ spec:
     service:
       type: ClusterIP
       port: 3030
+
+    env:
+      - name: IMAGE_INDEX_FILE_PATH
+        value: /root/index/index.json
+
+    volumes:
+      - name: index
+        emptyDir: {}
+
+    volumeMounts:
+      - name: index
+        mountPath: /root/index
 
     ingress:
       enabled: true

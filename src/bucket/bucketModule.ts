@@ -17,7 +17,7 @@ const bucket = new Bucket(
   imageBucket.namespace,
   imageBucket.name,
 );
-const index = new FileIndex(imageBucket.index.file_path);
+const index = new FileIndex(imageBucket.index.filePath);
 const imageBucketService = new ImageBucketService(bucket, index);
 
 export const bucketModule = {

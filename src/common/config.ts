@@ -40,7 +40,7 @@ export const appConfig = () => ({
     namespace: process.env.IMAGE_BUCKET_NAMESPACE || 'aaaaa',
     name: process.env.IMAGE_BUCKET_NAME || 'some-bucket-name',
     index: {
-      file_path: process.env.IMAGE_INDEX_FILE_PATH || './tmp/index.txt',
+      filePath: process.env.IMAGE_INDEX_FILE_PATH || './tmp/index.txt',
     },
   },
   post: {

@@ -16,14 +16,10 @@ spec:
     remediation:
       remediateLastFailure: true
   values:
-    nodeSelector:
-      kubernetes.io/arch: amd64
-      kubernetes.io/os: linux
-
     image:
       repository: "ghcr.io/toledompm/post-api"
       pullPolicy: IfNotPresent
-      tag: "0.4.2"
+      tag: "0.5.1"
 
     secretEnv: post-api-env
     secretFiles:

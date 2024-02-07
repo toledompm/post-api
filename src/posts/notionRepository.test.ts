@@ -327,6 +327,40 @@ test('getPostContent', async (t) => {
                 color: 'default',
               },
             },
+            {
+              type: 'text',
+              text: {
+                content: 'This is a link block in a paragraph',
+                link: { url: 'https://example.com' },
+              },
+              plain_text: 'This is a link block in a paragraph',
+              href: 'https://example.com',
+              annotations: {
+                bold: false,
+                italic: false,
+                strikethrough: false,
+                underline: false,
+                code: false,
+                color: 'default',
+              },
+            },
+            {
+              type: 'text',
+              text: {
+                content: 'This is the rest of the paragraph',
+                link: null,
+              },
+              plain_text: 'This is the rest of the paragraph',
+              href: null,
+              annotations: {
+                bold: false,
+                italic: false,
+                strikethrough: false,
+                underline: false,
+                code: false,
+                color: 'default',
+              },
+            },
           ],
         },
       },
@@ -350,7 +384,11 @@ test('getPostContent', async (t) => {
       },
       {
         heading: undefined,
-        paragraph: 'This is a text paragraph',
+        paragraph: [
+          'This is a text paragraph',
+          { url: 'https://example.com', text: 'This is a link block in a paragraph' },
+          'This is the rest of the paragraph',
+        ],
       },
     ]),
   );

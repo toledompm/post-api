@@ -16,7 +16,7 @@ docker-dev: ## Run the app in development mode
 		-p 3030:3030 \
 		--env-file .env \
 		"$(IMG_NAME):$(IMG_TAG)" \
-		npm run dev
+		sh -c 'mkdir /root/index && touch /root/index/prod.txt && npm run dev'
 
 .PHONY: docker-test
 docker-test: ## Run app unit tests

@@ -250,8 +250,14 @@ function parseHeading1Block(block: Heading1BlockObjectResponse): string {
   return block.heading_1.rich_text[0]?.plain_text || '';
 }
 
-function parseParagraphBlock(block: ParagraphBlockObjectResponse): string {
-  return block.paragraph.rich_text[0]?.plain_text || '';
+function parseParagraphBlock(block: ParagraphBlockObjectResponse): (string | { url: string, text: string })[] {
+  return block.paragraph.rich_text.map((text) => {
+    if (text.href) {
+      return { url: text.href, text: text.plain_text };
+    }
+
+    return text.plain_text;
+  });
 }
 
 function parseImageBlock(block: ImageBlockObjectResponse): {

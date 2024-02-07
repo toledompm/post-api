@@ -14,10 +14,10 @@ class PostContentHeading implements IPostContentHeading {
 }
 
 class PostContentParagraph implements IPostContentParagraph {
-  paragraph: string;
+  paragraph: (string | { url: string, text: string })[];
 
   constructor(props: Partial<IPostContentParagraph>) {
-    this.paragraph = props.paragraph || '';
+    this.paragraph = props.paragraph || [];
   }
 }
 

@@ -70,7 +70,7 @@ test('getPostContent', async (t) => {
       heading: 'heading',
     },
     {
-      paragraph: 'paragraph',
+      paragraph: ['paragraph', { url: 'link', text: 'foo' }],
     },
     {
       image: {
@@ -85,7 +85,7 @@ test('getPostContent', async (t) => {
       heading: 'heading',
     },
     {
-      paragraph: 'paragraph',
+      paragraph: ['paragraph', { url: 'link', text: 'foo' }],
     },
     {
       image: {

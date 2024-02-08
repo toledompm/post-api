@@ -1,0 +1,66 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: post-api
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app
+      version: '0.x.x'
+      sourceRef:
+        kind: HelmRepository
+        name: homelab
+      interval: 1m
+  upgrade:
+    remediation:
+      remediateLastFailure: true
+  values:
+    image:
+      repository: 'ghcr.io/toledompm/post-api'
+      pullPolicy: IfNotPresent
+      tag: '0.5.1'
+
+    secretEnv: post-api-env
+    secretFiles:
+      - name: post-api-oci
+        mountPath: /root/.oci/
+
+    service:
+      type: ClusterIP
+      port: 3030
+
+    env:
+      - name: IMAGE_INDEX_FILE_PATH
+        value: /root/index/index.json
+
+    volumes:
+      - name: index
+        emptyDir: {}
+
+    volumeMounts:
+      - name: index
+        mountPath: /root/index
+
+    ingress:
+      enabled: true
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: blog-api.toledompm.xyz
+        external-dns.alpha.kubernetes.io/target: cluster.toledompm.xyz
+      hosts:
+        - host: blog-api.toledompm.xyz
+          paths:
+            - path: /api
+              pathType: Prefix
+
+    resources:
+      limits:
+        cpu: 100m
+        memory: 256Mi
+
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 4
+      targetCPUUtilizationPercentage: 80
+      targetMemoryUtilizationPercentage: 80

@@ -1,4 +1,4 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: post-api
@@ -16,14 +16,16 @@ spec:
     remediation:
       remediateLastFailure: true
   values:
+    replicaCount: 1
+
     image:
       repository: 'ghcr.io/toledompm/post-api'
       pullPolicy: IfNotPresent
-      tag: '0.5.1'
+      tag: '0.6.0'
 
-    secretEnv: post-api-env
+    secretEnv: post-api-staging-env
     secretFiles:
-      - name: post-api-oci
+      - name: post-api-staging-oci
         mountPath: /root/.oci/
 
     service:
@@ -45,10 +47,10 @@ spec:
     ingress:
       enabled: true
       annotations:
-        external-dns.alpha.kubernetes.io/hostname: blog-api.toledompm.xyz
+        external-dns.alpha.kubernetes.io/hostname: blog-api-staging.toledompm.xyz
         external-dns.alpha.kubernetes.io/target: cluster.toledompm.xyz
       hosts:
-        - host: blog-api.toledompm.xyz
+        - host: blog-api-staging.toledompm.xyz
           paths:
             - path: /api
               pathType: Prefix
@@ -59,8 +61,4 @@ spec:
         memory: 256Mi
 
     autoscaling:
-      enabled: true
-      minReplicas: 2
-      maxReplicas: 4
-      targetCPUUtilizationPercentage: 80
-      targetMemoryUtilizationPercentage: 80
+      enabled: false

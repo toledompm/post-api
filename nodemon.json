@@ -2,7 +2,7 @@
   "restartable": "rs",
   "ignore": [".git", "node_modules/**/node_modules"],
   "verbose": true,
-  "exec": "TS_NODE_PROJECT=${NODE_ENV}.tsconfig.json npm run build && node dist/app.js",
+  "exec": "npm run build && node dist/app.js",
   "watch": ["src/"],
   "env": {
     "NODE_ENV": "prod"

@@ -18,9 +18,8 @@ export class Bucket implements IBucket {
     };
 
     try {
-      const response = await this.ociObjectStorageClient.headObject(
-        headObjectRequest,
-      );
+      const response =
+        await this.ociObjectStorageClient.headObject(headObjectRequest);
 
       return response.versionId !== null;
     } catch (error) {

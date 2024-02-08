@@ -14,7 +14,7 @@ class PostContentHeading implements IPostContentHeading {
 }
 
 class PostContentParagraph implements IPostContentParagraph {
-  paragraph: (string | { url: string, text: string })[];
+  paragraph: (string | { url: string; text: string })[];
 
   constructor(props: Partial<IPostContentParagraph>) {
     this.paragraph = props.paragraph || [];

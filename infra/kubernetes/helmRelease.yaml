@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: app
-      version: "0.x.x"
+      version: '0.x.x'
       sourceRef:
         kind: HelmRepository
         name: homelab
@@ -17,9 +17,9 @@ spec:
       remediateLastFailure: true
   values:
     image:
-      repository: "ghcr.io/toledompm/post-api"
+      repository: 'ghcr.io/toledompm/post-api'
       pullPolicy: IfNotPresent
-      tag: "0.5.1"
+      tag: '0.5.1'
 
     secretEnv: post-api-env
     secretFiles:

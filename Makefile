@@ -1,5 +1,5 @@
 IMG_NAME=node
-IMG_TAG=18.12-slim
+IMG_TAG=20.11-slim
 
 .PHONY: help
 help: ## Show this help

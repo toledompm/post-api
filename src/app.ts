@@ -1,3 +1,4 @@
+require('module-alias/register');
 import { appConfig } from '@common/config';
 import cors from '@fastify/cors';
 import Etag from '@fastify/etag';

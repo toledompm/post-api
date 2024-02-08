@@ -1,4 +1,3 @@
-require('module-alias/register');
 import type { IImageBucketService } from '@bucket/types';
 import { PostService } from '@posts/postService';
 import type { IPostContent, IPostInfo, IPostRepository } from '@posts/types';

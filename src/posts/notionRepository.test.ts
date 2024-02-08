@@ -1,4 +1,3 @@
-require('module-alias/register');
 import type { Client } from '@notionhq/client';
 import type {
   ListBlockChildrenResponse,

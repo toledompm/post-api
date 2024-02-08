@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: post-api
+  name: post-api-staging
 spec:
   interval: 5m
   chart:

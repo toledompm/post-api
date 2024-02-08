@@ -1,4 +1,3 @@
-require('module-alias/register');
 import type { IPostInfo, IPostService } from '@posts/types';
 import { RssService } from '@rss/rssService';
 import test from 'ava';

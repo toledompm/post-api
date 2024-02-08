@@ -1,4 +1,3 @@
-require('module-alias/register');
 import { ImageBucketService } from '@bucket/imageBucketService';
 import test from 'ava';
 import Sinon from 'sinon';

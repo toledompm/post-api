@@ -9,9 +9,7 @@
   "root": true,
   "rules": {
     "max-classes-per-file": "off",
-    "no-duplicate-imports": "off",
-    "arrow-parens": ["error", "always"],
-    "import/no-duplicates": ["error", { "considerQueryString": true }]
+    "arrow-parens": ["error", "always"]
   },
   "env": {
     "node": true,

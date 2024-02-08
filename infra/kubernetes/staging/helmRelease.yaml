@@ -21,7 +21,7 @@ spec:
     image:
       repository: 'ghcr.io/toledompm/post-api'
       pullPolicy: IfNotPresent
-      tag: '0.6.0'
+      tag: '0.6.1'
 
     secretEnv: post-api-staging-env
     secretFiles:

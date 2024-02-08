@@ -16,7 +16,7 @@ export interface IPostContentHeading {
 }
 
 export interface IPostContentParagraph {
-  paragraph: (string | { url: string, text: string })[];
+  paragraph: (string | { url: string; text: string })[];
 }
 
 export interface IPostContentImage {

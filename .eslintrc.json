@@ -9,11 +9,12 @@
   "root": true,
   "rules": {
     "max-classes-per-file": "off",
-    "arrow-parens": ["error", "always"]
+    "no-duplicate-imports": "off",
+    "arrow-parens": ["error", "always"],
+    "import/no-duplicates": ["error", { "considerQueryString": true }]
   },
   "env": {
     "node": true,
-    "jest": true,
     "es6": true
   },
   "settings": {

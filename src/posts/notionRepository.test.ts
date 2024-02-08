@@ -1,3 +1,4 @@
+require('module-alias/register');
 import type { Client } from '@notionhq/client';
 import type {
   ListBlockChildrenResponse,
@@ -51,6 +52,7 @@ test.beforeEach(async () => {
 test('getPosts', async (t) => {
   const dateString = '2021-01-01T00:00:00.000Z';
   const mockPageResponse: PageObjectResponse = {
+    public_url: 'url',
     icon: null,
     cover: null,
     created_by: { id: 'null', object: 'user' },
@@ -281,6 +283,7 @@ test('getPostContent', async (t) => {
         id: '1',
         type: 'heading_1',
         heading_1: {
+          is_toggleable: false,
           color: 'default',
           rich_text: [
             {
@@ -386,7 +389,10 @@ test('getPostContent', async (t) => {
         heading: undefined,
         paragraph: [
           'This is a text paragraph',
-          { url: 'https://example.com', text: 'This is a link block in a paragraph' },
+          {
+            url: 'https://example.com',
+            text: 'This is a link block in a paragraph',
+          },
           'This is the rest of the paragraph',
         ],
       },

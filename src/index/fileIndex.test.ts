@@ -1,3 +1,4 @@
+require('module-alias/register');
 import { FileIndex } from '@index/fileIndex';
 import test from 'ava';
 import { existsSync } from 'fs';

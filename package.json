@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "build": "rm -rf dist && tsc -p ${NODE_ENV}.tsconfig.json && tscpaths -p ${NODE_ENV}.tsconfig.json -s ./src -o dist",
+    "build": "rm -rf dist && tsc -p ${NODE_ENV}.tsconfig.json",
     "lint": "eslint src --ext .ts",
     "test": "NODE_ENV=test npm run build && nyc ava -s",
     "dev": "nodemon",
@@ -30,8 +30,18 @@
     "nyc": "^15.1.0",
     "prettier": "^3.2.5",
     "sinon": "^17.0.1",
-    "tscpaths": "^0.0.9",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@fastify/cors": "^9.0.1",
+    "@fastify/etag": "^5.1.0",
+    "@notionhq/client": "^2.2.14",
+    "ajv": "^8.12.0",
+    "fastify": "^4.26.0",
+    "module-alias": "^2.2.3",
+    "oci-sdk": "^2.79.0",
+    "split2": "^4.2.0",
+    "xml": "^1.0.1"
   },
   "ava": {
     "failFast": true,
@@ -43,14 +53,11 @@
       "compile": false
     }
   },
-  "dependencies": {
-    "@fastify/cors": "^9.0.1",
-    "@fastify/etag": "^5.1.0",
-    "@notionhq/client": "^2.2.14",
-    "ajv": "^8.12.0",
-    "fastify": "^4.26.0",
-    "oci-sdk": "^2.78.0",
-    "split2": "^4.2.0",
-    "xml": "^1.0.1"
+  "_moduleAliases": {
+    "@common": "dist/common",
+    "@posts": "dist/posts",
+    "@rss": "dist/rss",
+    "@index": "dist/index",
+    "@bucket": "dist/bucket"
   }
 }
